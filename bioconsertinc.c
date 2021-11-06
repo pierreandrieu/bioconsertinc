@@ -170,6 +170,7 @@ void bioConsert(int* departure_rankings, double* cost_matrix_1D, int n, int nb_r
     int i, j;
     int* r = malloc_array_int(n);
     int cpt = 0, cpt2;
+
     for(i = 0; i < nb_rankings_departure; i++)
     {
         cpt2 = cpt;
@@ -177,7 +178,9 @@ void bioConsert(int* departure_rankings, double* cost_matrix_1D, int n, int nb_r
         {
             r[j] = departure_rankings[cpt2++];
         }
+
         dst_min[i] += improve_one_ranking(r, cost_matrix_1D, n);
+
         cpt2 = cpt;
         for(j = 0; j < n; j++)
         {
@@ -185,6 +188,7 @@ void bioConsert(int* departure_rankings, double* cost_matrix_1D, int n, int nb_r
         }
         cpt += n;
     }
+
     free_array_int(r);
 }
 
@@ -263,7 +267,7 @@ double improve_one_ranking(int* r, double* cost_matrix_1D, int n)
 
     returns : boolean 0/1 : is "element" alone in its current bucket?
  */
-int compute_delta_costs(int* r, int element, double* m, int bucket_elem, int max_id_bucket, double* change, double* add, int n )
+int compute_delta_costs(int* r, int element, double* m, int bucket_elem, int max_id_bucket, double* change, double* add, int n)
 {
     /* pos : integer such that m[pos] = cost of having target before elem 0, m[pos+1] = cost of having target after elem 0, m[pos+2] = cost of having target tied with elem 0 */
     int alone = 1, e2, bucket_e2, pos = 3 * n * element;
@@ -333,14 +337,14 @@ int search_to_change_bucket(int bucket_elem, double* change, int max_id_bucket)
 
 */
 
-    if(change[i-1] < 0)
+    if(change[i-1] < -0.001)
     {
         res = i-1;
     }
     while(res == -1 && i <= max_id_bucket)
     {
         change[i] += change[i-1];
-        if(change[i] < 0)
+        if(change[i] < -0.001)
         {
             res = i;
         }
@@ -351,7 +355,7 @@ int search_to_change_bucket(int bucket_elem, double* change, int max_id_bucket)
     {
 
         i = bucket_elem - 2;
-        if(i >= -1 && change[i+1] < 0)
+        if(i >= -1 && change[i+1] < -0.001)
         {
             res = i+1;
         }
@@ -360,7 +364,7 @@ int search_to_change_bucket(int bucket_elem, double* change, int max_id_bucket)
         {
             change[i] += change[i+1];
 
-            if(change[i] < 0)
+            if(change[i] < -0.001)
             {
                 res = i;
             }
@@ -406,7 +410,7 @@ int search_to_add_bucket(int bucket_elem, double* add, int max_id_bucket)
     int i = bucket_elem + 2;
     int res = -1;
 
-    if(add[i-1] < 0)
+    if(add[i-1] < -0.001)
     {
         res = i-1;
     }
@@ -415,7 +419,7 @@ int search_to_add_bucket(int bucket_elem, double* add, int max_id_bucket)
     {
         add[i] += add[i-1];
 
-        if(add[i] < 0)
+        if(add[i] < -0.001)
         {
             res = i;
         }
@@ -426,7 +430,7 @@ int search_to_add_bucket(int bucket_elem, double* add, int max_id_bucket)
     {
         i = bucket_elem-1;
 
-        if(add[i+1] < 0)
+        if(add[i+1] < -0.001)
         {
             res = i+1;
         }
@@ -435,7 +439,7 @@ int search_to_add_bucket(int bucket_elem, double* add, int max_id_bucket)
         {
             add[i] += add[i+1];
 
-            if(add[i] < 0)
+            if(add[i] < -0.001)
             {
                 res = i;
             }
@@ -669,8 +673,6 @@ void print_array_double(double* t, int n)
     }
     printf("\n");
 }
-
-
 
 int size_t2int(size_t val)
 {
