@@ -2,17 +2,11 @@ from setuptools import setup, find_packages
 from distutils.extension import Extension
 import numpy 
 
-
-def readme():
-    with open('README.md') as f:
-        return f.read()
-
-
 setup(name='bioconsertinc',
-      version='0.0.9',
+      version='1.0.0',
       description='BioConsert, c implementation',
-      url='https://github.com/pierreandrieu/bioconsertinc'
-      long_description=readme(),
+      url='https://github.com/pierreandrieu/bioconsertinc',
+      long_description='BioConsert algorithm, c implementation',
       author='Pierre Andrieu',
       author_email='pierre.andrieu@lilo.org',
       license='MIT',
