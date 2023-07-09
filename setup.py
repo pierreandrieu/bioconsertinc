@@ -6,7 +6,7 @@ def get_numpy_include_dirs():
     return [numpy.get_include()]
 
 setup(name='bioconsertinc',
-      version='1.0.1',
+      version='1.0.2',
       description='BioConsert, c implementation',
       url='https://github.com/pierreandrieu/bioconsertinc',
       long_description='BioConsert algorithm, c implementation',
