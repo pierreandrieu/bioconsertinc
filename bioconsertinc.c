@@ -1,4 +1,7 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+#ifndef __SIZE_MAX__
+#define __SIZE_MAX__ (SIZE_MAX)
+#endif
 #include <Python.h>
 #include "numpy/arrayobject.h"
 #include <stdio.h>
