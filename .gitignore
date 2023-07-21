@@ -1,0 +1,48 @@
+# .gitignore
+
+# Ignore les fichiers .so générés
+*.so
+
+# Ignore les fichiers .o générés
+*.o
+
+# Ignore les fichiers compilés Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyo.d
+*.pyd.d
+
+# Ignore les fichiers de construction
+build/
+dist/
+
+# Ignore les environnements virtuels
+venv/
+*.venv/
+.env/
+
+# Ignore les fichiers de configuration de l'IDE
+.idea/
+.vscode/
+
+# Ignore les fichiers de log
+*.log
+
+# Ignore les fichiers de cache
+*.cache/
+.cache/
+
+# Ignore les dossiers de test
+test/
+tests/
+__tests__/
+
+# Ignore les fichiers temporaires du système
+*.tmp
+*.bak
+*.swp
+*~
+.~*
+
