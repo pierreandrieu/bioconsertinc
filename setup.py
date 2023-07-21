@@ -8,7 +8,7 @@ def get_numpy_include_dirs():
 
 
 setup(name='bioconsertinc',
-      version='2.0.0',
+      version='2.0.1',
       description='BioConsert, c implementation',
       url='https://github.com/pierreandrieu/bioconsertinc',
       long_description='BioConsert algorithm, c implementation',
