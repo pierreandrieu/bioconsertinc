@@ -1,12 +1,14 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 from distutils.extension import Extension
+
 
 def get_numpy_include_dirs():
     import numpy
     return [numpy.get_include()]
 
+
 setup(name='bioconsertinc',
-      version='1.0.2',
+      version='2.0.0',
       description='BioConsert, c implementation',
       url='https://github.com/pierreandrieu/bioconsertinc',
       long_description='BioConsert algorithm, c implementation',
@@ -14,8 +16,7 @@ setup(name='bioconsertinc',
       author_email='pierre.andrieu@lilo.org',
       license='MIT',
       ext_modules=[Extension("bioconsertinc", ["bioconsertinc.c"], include_dirs=get_numpy_include_dirs())],
-      python_requires='>=3',
+      python_requires='>=3.8',
       zip_safe=False,
-      install_requires=['numpy>=1.13'],
-)
-
+      install_requires=['numpy>=1.24.0'],
+      )

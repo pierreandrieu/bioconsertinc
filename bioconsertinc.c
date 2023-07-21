@@ -1,12 +1,12 @@
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <Python.h>
 #include "numpy/arrayobject.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #define L 2
 #define C 6
-#define __SIZE_MAX__ 2147483647
+
 
 /* malloc and free functions */
 int* malloc_array_int(int n);
@@ -63,31 +63,34 @@ static PyObject *method_bioconsertinc(PyObject *self, PyObject *args) {
     if (!PyArg_ParseTuple(args, "O!O!O!O!iiiO!", &PyArray_Type, &positions, &PyArray_Type, &departure_rankings, &PyArray_Type, &vect_before, &PyArray_Type, &vect_tied, &n, &m, &nb_rankings_departure, &PyArray_Type, &dst_min))
         return NULL;
 
-    if (vect_before->descr->type_num != PyArray_DOUBLE) 
+    if (!PyArg_ParseTuple(args, "O!O!O!O!iiiO!", &PyArray_Type, &positions, &PyArray_Type, &departure_rankings, &PyArray_Type, &vect_before, &PyArray_Type, &vect_tied, &n, &m, &nb_rankings_departure, &PyArray_Type, &dst_min))
+        return NULL;
+
+    if (PyArray_TYPE(vect_before) != NPY_DOUBLE) 
     {
         PyErr_SetString(PyExc_ValueError,"argument 3 must be of type array double");
         return NULL;
     }
     
-    if (vect_tied->descr->type_num != PyArray_DOUBLE) 
+    if (PyArray_TYPE(vect_tied) != NPY_DOUBLE) 
     {
         PyErr_SetString(PyExc_ValueError,"argument 4 must be of type array double");
         return NULL;
     }
     
-    if (dst_min->descr->type_num != PyArray_DOUBLE) 
+    if (PyArray_TYPE(dst_min) != NPY_DOUBLE) 
     {
         PyErr_SetString(PyExc_ValueError,"argument 7 must be of type array double");
         return NULL;
     }
     
-    if (positions->descr->type_num != PyArray_INT) 
+    if (PyArray_TYPE(positions) != NPY_INT) 
     {
         PyErr_SetString(PyExc_ValueError,"argument 1 must be of type array int");
         return NULL;
     }
     
-    if (departure_rankings->descr->type_num != PyArray_INT) 
+    if (PyArray_TYPE(departure_rankings) != NPY_INT) 
     {
         PyErr_SetString(PyExc_ValueError,"argument 2 must be of type array int");
         return NULL;
@@ -104,36 +107,35 @@ static PyObject *method_bioconsertinc(PyObject *self, PyObject *args) {
     
     for (i = 0; i < 6; i++)
     {
-        vect_before_c[i] = *(double *)(vect_before->data + i*vect_before->strides[0]);    
-        vect_tied_c[i] = *(double *)(vect_tied->data + i*vect_tied->strides[0]);    
+        vect_before_c[i] = *(double *)(PyArray_GETPTR1(vect_before, i));    
+        vect_tied_c[i] = *(double *)(PyArray_GETPTR1(vect_tied, i));    
     }
 
     for (i = 0; i < nb_rankings_departure; i++)
-    {
-        dst_min_c[i] = *(double *)(dst_min->data + i*dst_min->strides[0]);    
-    }
+        *(double *)(PyArray_GETPTR1(dst_min, i)) = dst_min_c[i]; 
 
     for (i = 0; i < size_positions; i++)
     {
-        positions_c[i] = *(int *)(positions->data + i*positions->strides[0]);    
+        positions_c[i] = *(int *)(PyArray_GETPTR1(positions, i));    
     }
 
+        
     for (i = 0; i < size_departure_rankings; i++)
     {
-        departure_rankings_c[i] = *(int *)(departure_rankings->data + i*departure_rankings->strides[0]);    
-    }  
-    
+        *(int *)(PyArray_GETPTR1(departure_rankings, i)) = departure_rankings_c[i];    
+    }
+
     cost_matrix_1D = malloc_array_double(n * n * 3);
     fill_cost_matrix(cost_matrix_1D, positions_c, vect_before_c, vect_tied_c, n, m);
 
     bioConsert(departure_rankings_c, cost_matrix_1D, n, nb_rankings_departure, dst_min_c);
     
-    for (i = 0; i < nb_rankings_departure; i++)
-        (*(double*)(dst_min->data + i*dst_min->strides[0])) = dst_min_c[i]; 
-        
-    for (i = 0; i < size_departure_rankings; i++)
-    {
-        (*(int *)(departure_rankings->data + i*departure_rankings->strides[0])) = departure_rankings_c[i];    
+    for (i = 0; i < nb_rankings_departure; i++) {
+        *(double *)PyArray_GETPTR1(dst_min, i) = dst_min_c[i];
+    }
+
+    for (i = 0; i < size_departure_rankings; i++) {
+        *(int *)PyArray_GETPTR1(departure_rankings, i) = departure_rankings_c[i];
     }
 
     free_array_double(cost_matrix_1D);
