@@ -1,8 +1,12 @@
+#if defined(_MSC_VER)
+    #include <BaseTsd.h>
+    typedef SSIZE_T ssize_t;
+#endif
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+#include <Python.h>
 #ifndef __SIZE_MAX__
 #define __SIZE_MAX__ (SIZE_MAX)
 #endif
-#include <Python.h>
 #include "numpy/arrayobject.h"
 #include <stdio.h>
 #include <stdlib.h>
